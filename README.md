@@ -30,7 +30,7 @@ You can try the game live here:
 
 ## 🛠️ **Installation & Setup**
 
-To play **Catch Quest!** locally, follow these steps:
+To Modify my game **Catch Quest!** locally, follow these steps:
 
 ### 1. Clone the repository
 ```bash
