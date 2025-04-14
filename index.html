@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Luis Gornes" />
+    <meta name="description"
+        content="Catch Quest! - Catch the Falling Objects is a simple yet engaging game where players control a basket at the bottom of the screen to catch falling objects. " />
+    <meta name="keywords"
+        content="Luis Gornes, Final Project, COP4111C, Catch Quest, Catch the Falling Objects, Game Development, JavaScript, HTML, CSS, Canvas" />
+    <link rel="icon" href="assests/logo2.png" type="image/png" />
+    <link rel="stylesheet" type="text/css" href="css/stylesheet.css" />
+    <link rel="stylesheet" type="text/css" href="css/mediaque.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <audio id="catchSound" src="sounds/catch.mp3" preload="auto"></audio>
+    <audio id="gameOverSound" src="sounds/gameover.mp3" preload="auto"></audio>
+    <title>Catch Quest! - Catch the Falling Objects</title>
+</head>
+
+<body>
+    <header>
+        <div id="hamburger">☰</div>
+        <nav id="menu">
+            <button id="difficultyButton">Set Difficulty: Easy</button>
+            <button id="instructionsButton">Instructions</button>
+            <button id="changeColorsButton">Change Colors</button>
+            <button id="toggleDarkModeButton">Toggle Dark Mode</button>
+            <button id="muteButton">Mute Sound FX</button>
+            <button id="restartGame">Restart Game</button>
+            <button id="saveScore">Save & Resume Later</button>
+            <button id="clearLeaderboard">Clear Leaderboard</button>
+            <button id="toggleLeaderboardButton">Toggle Leaderboard</button>
+        </nav>
+    </header>
+
+    <main id="main-container">
+
+
+        <section id="game-container">
+            <h1>Catch Quest!</h1>
+            <p>by Luis Gornes</p>
+            <img src="assests/logo2.png" alt="Catch Quest Logo" class="logo">
+            <canvas id="gameCanvas" width="400" height="600"></canvas>
+        </section>
+
+        <aside id="leaderboard">
+            <h2>Leaderboard</h2>
+            <div class="difficulty-tabs">
+                <button class="tab active" data-level="easy">Easy</button>
+                <button class="tab" data-level="medium">Medium</button>
+                <button class="tab" data-level="hard">Hard</button>
+            </div>
+            <ul id="scoreList" class="scores-container"></ul>
+        </aside>
+    </main>
+
+    <!-- Modals -->
+    <div id="overlay"></div>
+
+    <div id="instructions" class="modal">
+        <h2>Instructions</h2>
+        <p>Use the arrow keys to move player. <br>Catch the falling objects. <br>Catch as many as you can!! <br>Will you
+            win?</p>
+        <button id="closeInstructions">Close</button>
+    </div>
+
+    <div id="lossNotification" class="modal">
+        <h2>Game Over!</h2>
+        <p>Your score: <span id="finalScore"></span></p>
+        <p>Better luck next time! 😁</p>
+        <input type="text" id="playerName" placeholder="Enter your name" />
+        <button style="background-color:grey;" id="submitScore">Submit</button>
+        <button id="closeLossNotification">Close</button>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Luis Gornes. All Rights Reserved.</p>
+    </footer>
+
+    <script src="js/catchQuest.js"></script>
+</body>
+
+
+</html>

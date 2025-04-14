@@ -1,0 +1,19 @@
+/* Media Queries */
+@media (max-width: 768px) {
+    #main-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #leaderboard {
+        width: 90%;
+        position: static;
+        margin: 20px 0;
+    }
+
+    #gameCanvas {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+    }
+}

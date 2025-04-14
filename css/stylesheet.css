@@ -1,0 +1,477 @@
+/* Global styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Roboto Mono', monospace;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  /* Horizontally center the content */
+  align-items: center;
+  /* Vertically center the content */
+  background-color: #121212;
+  /* Default dark background */
+  color: #fff;
+  padding-bottom: 50px;
+  /* Add padding to prevent content from being hidden behind footer */
+}
+
+/* Container for both game and leaderboard */
+#main-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: row;
+  gap: 20px;
+  width: 100%;
+  max-width: 880px;
+  margin-top: 2px;
+}
+
+#game-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+#clearLeaderboard {
+  align-items: center;
+  align-content: center;
+}
+
+h1 {
+  font-size: 36px;
+  color: #ff4081;
+  /* Color for the title */
+  margin-bottom: 1px;
+  /* Space between the title and canvas */
+  text-align: center;
+}
+
+h2 {
+  color: white;
+  text-align: center;
+}
+
+button {
+  font-size: 18px;
+  background-color: #ff4081;
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #f50057;
+  transform: scale(1.05);
+}
+
+canvas {
+  display: block;
+  margin: 30px auto;
+  background: linear-gradient(45deg, #4caf50, #2196f3);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+#toggleLeaderboardButton {
+  margin-top: 20px;
+  margin-bottom: auto;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+#leaderboard {
+  background-color: #212121;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  height: 500px;
+  width: 365px;
+  overflow-y: auto;
+  display: none;
+  margin-right: 20px;
+  align-self: flex-start;
+  position: sticky;
+  top: 60px;
+  margin-top: 155px;
+}
+
+#leaderboard h2 {
+  font-size: 18px;
+}
+
+#leaderboard button {
+  font-size: 15px;
+}
+
+/* Keep leaderboard list aligned to the left */
+#scoreList {
+  list-style: none;
+  padding: 0;
+}
+
+#scoreList li {
+  padding: 8px;
+  border-bottom: 1px solid #444;
+}
+
+/* Light Mode */
+body.light-mode {
+  background-color: #ffffff;
+  color: #121212;
+}
+
+button.light-mode {
+  background-color: grey;
+  color: white;
+}
+
+canvas.light-mode {
+  background: linear-gradient(45deg, #2196f3, #ffeb3b);
+}
+
+/* Updated Hamburger Menu CSS to stack buttons vertically */
+#menu {
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: 20px;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  width: 200px;
+  z-index: 10000;
+  /* Adjust the width of the menu */
+}
+
+#menu button {
+  display: block;
+  /* Stack buttons vertically */
+  margin: 5px 0;
+  /* Space out buttons */
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  /* Make the buttons stretch to full width */
+  text-align: left;
+  /* Align text to the left */
+}
+
+#menu button {
+  display: block;
+  /* Stack buttons vertically */
+  margin: 5px 0;
+  /* Space out buttons */
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  /* Make the buttons stretch to full width */
+  text-align: left;
+  /* Align text to the left */
+}
+
+#hamburger {
+  cursor: pointer;
+  font-size: 36px;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  animation: pulse 2s infinite;
+  color: #ff4081;
+  transition: all 0.3s ease;
+}
+
+#hamburger:hover {
+  color: #f50057;
+  transform: scale(1.1);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Add this to stop animation after first interaction */
+#hamburger.clicked {
+  animation: none;
+}
+
+#overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  z-index: 999;
+}
+
+#instructions {
+  /* Center the modal in the viewport */
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  /* Fixed position to overlay the screen */
+  top: 50%;
+  /* Vertically center modal */
+  left: 50%;
+  /* Horizontally center modal */
+  transform: translate(-50%, -50%);
+  /* Adjust position to true center */
+  background-color: rgba(0, 0, 0, 0.9);
+  /* Semi-transparent background */
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  z-index: 1000;
+}
+
+#instructions h2,
+#instructions p {
+  color: white;
+  /* Adjust text color */
+  text-align: center;
+}
+
+#closeInstructions {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #ff4081;
+  border: none;
+  border-radius: 25px;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#closeInstructions:hover {
+  background-color: #e91e63;
+}
+
+/* Logo Styling */
+.logo {
+  width: 50px; /* Adjust logo size */
+  height: auto;
+  margin-right: 10px; /* Space between logo and title */
+}
+
+/* Loss Notification Style */
+#lossNotification {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 400px;
+  padding: 40px;
+  background: linear-gradient(145deg,
+      rgba(255, 105, 180, 0.99),
+      rgba(255, 20, 147, 0.95));
+  color: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  visibility: hidden;
+  text-align: center;
+  z-index: 9999;
+  transition: all 0.5s ease-out;
+}
+
+#lossNotification.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1.1);
+  /* Slightly enlarge when shown */
+}
+
+/* Stylish Confetti Effect */
+@keyframes confettiFall {
+  0% {
+    transform: translate(0, -100vh) rotate(0deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(200px, 100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.confetti {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  background-color: gold;
+  animation: confettiFall 3s ease-in-out infinite;
+  opacity: 0;
+}
+
+/* Fancy Close Button */
+#closeLossNotification {
+  background-color: grey;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 12px 30px;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#closeLossNotification:hover {
+  background-color: #d81b60;
+  transform: scale(1.05);
+}
+
+/* Animated Text Effects */
+#lossNotification h2 {
+  font-size: 36px;
+  margin-bottom: 10px;
+  color: #fff;
+  animation: textGlow 1s ease-out infinite alternate;
+}
+
+@keyframes textGlow {
+  0% {
+    text-shadow: 0 0 10px rgba(255, 20, 147, 0.8),
+      0 0 20px rgba(255, 20, 147, 0.6);
+  }
+
+  100% {
+    text-shadow: 0 0 20px rgba(255, 105, 180, 0.9),
+      0 0 30px rgba(255, 105, 180, 0.7);
+  }
+}
+
+/* Instructions for text animation */
+#lossNotification p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  animation: textFadeIn 1.5s ease-in-out forwards;
+}
+
+@keyframes textFadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+input[type="text"] {
+  padding: 10px;
+  border: 2px solid #ff4081;
+  border-radius: 5px;
+  margin-top: 10px;
+  width: 60%;
+  background-color: transparent;
+  color: white;
+  text-align: center;
+}
+
+input[type="text"]:focus {
+  border-color: #f50057;
+  outline: none;
+}
+
+input::placeholder {
+  color: white; /* Change to your desired color */
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  font-size: 16px;
+  padding: 5px;
+  background-color: #444;
+  margin-bottom: 5px;
+  border-radius: 5px;
+}
+
+/* Leaderboard tabs styling */
+.difficulty-tabs {
+  display: flex;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #444;
+}
+
+.difficulty-tabs .tab {
+  padding: 8px 16px;
+  background: #333;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  margin-right: 5px;
+  border-radius: 5px 5px 0 0;
+  transition: background-color 0.3s ease;
+}
+
+.difficulty-tabs .tab:hover {
+  background: #555;
+}
+
+.difficulty-tabs .tab.active {
+  background: #4caf50;
+  color: white;
+}
+
+.scores-container {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.scores-container li {
+  padding: 8px;
+  border-bottom: 1px solid #555;
+  background-color: transparent;
+  margin-bottom: 0;
+}
+
+/* Footer styling */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #212121;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 14px;
+  z-index: 100;
+}
