@@ -538,6 +538,34 @@ function initGame() {
     }
 }
 
+// Variable to store touch start position
+let touchStartX = 0;
+
+// Touch start event
+canvas.addEventListener('touchstart', (event) => {
+    event.preventDefault(); // Prevents default touch behavior (like scrolling)
+    touchStartX = event.touches[0].clientX; // Get the initial touch X position
+});
+
+// Touch move event
+canvas.addEventListener('touchmove', (event) => {
+    event.preventDefault(); // Prevent default touch behavior (like scrolling)
+    const touchX = event.touches[0].clientX; // Get current touch X position
+    moveBasket(touchX);
+});
+
+// Function to update the basket's position
+function moveBasket(touchX) {
+    const offsetX = touchX - touchStartX; // Calculate the horizontal distance moved
+    basket.x += offsetX; // Move the basket based on this distance
+
+    // Prevent the basket from going out of bounds
+    if (basket.x < 0) basket.x = 0;
+    if (basket.x + basket.width > canvas.width) basket.x = canvas.width - basket.width;
+
+    // Update touchStartX for the next touch move event
+    touchStartX = touchX;
+}
 
 
 initGame();
