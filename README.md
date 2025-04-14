@@ -24,7 +24,7 @@ In **Catch Quest!**, players control a basket that moves horizontally across the
 
 ## 🚀 **Demo**
 You can try the game live here:  
-[Catch Quest! Live Demo](https://luis33k.github.io/CatchQuest/) (replace with actual demo link)
+[Catch Quest! Live Demo](https://luis33k.github.io/CatchQuest/)
 
 ---
 
