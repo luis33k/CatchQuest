@@ -567,5 +567,35 @@ function moveBasket(touchX) {
     touchStartX = touchX;
 }
 
+// Handle canvas click for start button (for both Mouse and Touch)
+canvas.addEventListener('click', handleStartGameClick);
+canvas.addEventListener('touchstart', handleStartGameClick);
+
+function handleStartGameClick(e) {
+    e.preventDefault(); // Prevents default behavior (like scrolling)
+
+    let x, y;
+
+    if (e.type === 'click') {
+        // For mouse click, get the coordinates
+        const rect = canvas.getBoundingClientRect();
+        x = e.clientX - rect.left;
+        y = e.clientY - rect.top;
+    } else if (e.type === 'touchstart') {
+        // For touchstart, get the touch coordinates
+        const rect = canvas.getBoundingClientRect();
+        x = e.touches[0].clientX - rect.left;
+        y = e.touches[0].clientY - rect.top;
+    }
+
+    // Check if the coordinates are within the start button bounds
+    if (x >= canvas.width / 2 - 100 && x <= canvas.width / 2 + 100 &&
+        y >= canvas.height / 2 - 30 && y <= canvas.height / 2 + 30) {
+        // Start the game
+        gameStarted = true;
+        startGame();
+    }
+}
+
 
 initGame();
