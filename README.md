@@ -12,13 +12,20 @@ In **Catch Quest!**, players control a basket that moves horizontally across the
 ---
 
 ## 🏆 **Features**
-- 🎮 Simple, intuitive controls: Left & Right arrow keys to move the basket.
+- 🎮 Simple, intuitive controls: Left & Right arrow keys to move the basket (also supports swipe controls on mobile devices).
+- 📱 **Mobile-Friendly**: The game is fully optimized for mobile devices. Swipe left or right to move the basket on touchscreen devices.
 - 💥 Random falling objects with varying speeds.
 - 📝 Real-time score tracking on the screen.
 - 🛑 Game over when a set number of objects fall past the basket.
 - 🌟 **Leaderboard**: Track your best scores with localStorage.
 - 🔄 Smooth animations using the Canvas API.
 - 🔧 Open source and easy to customize!
+
+---
+
+## 🧑‍💻 **Credits**
+- Developed by Luis Gornes.
+- The game uses HTML5, CSS3, and JavaScript.
 
 ---
 
