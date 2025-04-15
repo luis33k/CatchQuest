@@ -6,6 +6,7 @@ let objects = [];
 let score = 0;
 let gameOver = false;
 let gameStarted = false;
+let lossNotificationShown = false;
 let lastTime = 0;
 let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
 let difficulty = 'Easy';
@@ -92,11 +93,20 @@ function applyColors() {
 
 // Function to toggle dark/light mode
 function toggleDarkMode() {
-    document.body.classList.toggle('light-mode');
+    const body = document.body;
+    body.classList.toggle('light-mode');
     const buttons = document.querySelectorAll('button');
     buttons.forEach(button => button.classList.toggle('light-mode'));
     const canvasElement = document.getElementById('gameCanvas');
     canvasElement.classList.toggle('light-mode');
+
+    // Set canvas background color based on dark mode state
+    if (body.classList.contains('light-mode')) {
+        canvasBackground = '#212121'; // Light mode background
+    } else {
+        canvasBackground = 'white'; // Dark mode background
+    }
+    applyColors(); // Update canvas background color
 }
 
 // Event listener for color change button
@@ -119,6 +129,10 @@ document.getElementById('toggleDarkModeButton').addEventListener('click', toggle
 
 // Update game state and render objects
 function update() {
+    if (gameOver) {
+        console.log('Game Over triggered!');
+    }
+    if (gameOver) return;
     if (!gameStarted) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -126,7 +140,7 @@ function update() {
 
     // Render falling objects and basket
     objects.forEach((obj, index) => {
-        obj.y += obj.speed;
+        if (!paused) obj.y += obj.speed;
         ctx.fillRect(obj.x, obj.y, obj.width, obj.height);
 
         // Sound for catching an object
@@ -139,7 +153,7 @@ function update() {
             catchSound.play();  // Play sound when an object is caught
         }
 
-        if (obj.y > canvas.height) {
+        if (obj.y > canvas.height + obj.height) {
             gameOver = true;
         }
     });
@@ -157,9 +171,6 @@ function update() {
     ctx.fillStyle = gradient;
     ctx.fillText(`Score: ${score}`, 10, 20);
 
-    if (gameOver) {
-        showLossNotification();
-    }
 }
 
 // Initialize default colors
@@ -170,20 +181,21 @@ const gameOverSound = document.getElementById("gameOverSound");
 
 // Display the Loss Notification with animations and confetti
 function showLossNotification() {
+    console.log("Showing loss notification!");
+    if (lossNotificationShown) return;
+
     const lossNotification = document.getElementById('lossNotification');
     const finalScore = document.getElementById('finalScore');
     finalScore.textContent = score;
-    gameOverSound.play();  // Play game over sound when the game ends
 
-    // Show the loss notification with smooth fade-in and slide
+    gameOverSound.play();
     lossNotification.classList.add('show');
+    lossNotification.style.display = 'block';
     triggerConfetti();
 
-    // Fade out the notification when clicked
-    document.getElementById('closeLossNotification').addEventListener('click', function() {
-        lossNotification.classList.remove('show');
-    });
+    lossNotificationShown = true;
 }
+
 
 // Trigger Confetti Effect
 function triggerConfetti() {
@@ -214,26 +226,30 @@ function saveScore(name) {
     const existingScoreIndex = highScores.findIndex(s => s.name === name && s.difficulty === difficulty);
 
     if (existingScoreIndex >= 0) {
-        // Only update if new score is higher
         if (score > highScores[existingScoreIndex].score) {
             highScores[existingScoreIndex] = { name, score, date, difficulty };
         }
     } else {
-        // Add new score
         highScores.push({ name, score, date, difficulty });
     }
 
     localStorage.setItem('highScores', JSON.stringify(highScores));
     updateLeaderboard();
 
-    // Reset game state and show start button
     document.getElementById('lossNotification').style.display = 'none';
     document.getElementById('overlay').style.display = 'none';
+    
     gameStarted = false;
     gameOver = false;
-    objects = [];
     score = 0;
-    initGame(); // This will show the start button again
+    objects = [];
+    lossNotificationShown = false;
+    
+    // Reset difficulty to saved one
+    updateDifficulty(); 
+    pauseButton.textContent = 'Pause'; // reset pause button
+    
+    resetGame();   
 }
 
 
@@ -288,13 +304,27 @@ function startGame() {
     lastTime = 0;  // Reset last time to allow new objects to start falling
     objects = [];  // Reset falling objects array
     score = 0;  // Reset score
+    pauseButton.textContent = 'Pause';
     gameOver = false;  // Reset game over flag
+    lossNotificationShown = false;
     requestAnimationFrame(gameLoop);  // Start the game loop
 }
 
+
 // Game loop
 function gameLoop(timestamp) {
-    if (gameOver) return;
+    if (paused || !gameStarted) return;
+
+    if (lastTime === null) {
+        lastTime = timestamp;
+    }
+
+    if (gameOver) {
+        if (!lossNotificationShown) {
+            showLossNotification();
+        }
+        return;
+    }
 
     // Calculate time delta for consistent object creation
     const deltaTime = timestamp - lastTime;
@@ -305,7 +335,7 @@ function gameLoop(timestamp) {
     }
 
     update();
-    requestAnimationFrame(gameLoop);
+    animationFrameId = requestAnimationFrame(gameLoop);
 }
 
 // Event listeners for menu and score
@@ -319,10 +349,7 @@ document.getElementById('submitScore').addEventListener('click', () => {
 });
 
 document.getElementById('closeLossNotification').addEventListener('click', () => {
-    document.getElementById('lossNotification').style.display = 'none';
-    document.getElementById('overlay').style.display = 'none';
-    gameStarted = false;
-    initGame(); // Show start button again
+    resetGame();
 });
 
 // Difficulty button functionality
@@ -341,6 +368,9 @@ function updateDifficulty() {
         fallingSpeed = 2;
         objectCreationInterval = 1000;
     }
+
+    // Reset shown flag so loss popup works after difficulty switch
+    lossNotificationShown = false;
 
     // Update button text
     const difficultyButton = document.getElementById('difficultyButton');
@@ -377,6 +407,7 @@ function restartGame() {
     objects = [];
     gameOver = false;
     gameStarted = false;
+    lossNotificationShown = false;
     lastTime = 0;
 
     // Reset difficulty settings
@@ -391,7 +422,10 @@ function restartGame() {
     document.getElementById('restartGame').style.display = 'none';
 
     // Clear any pending animation frames
-    cancelAnimationFrame(gameLoop);
+    if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+    }
 
     // Reinitialize the game
     initGame();
@@ -505,6 +539,7 @@ canvas.addEventListener('click', (e) => {
         if (x >= canvas.width / 2 - 100 && x <= canvas.width / 2 + 100 &&
             y >= canvas.height / 2 - 30 && y <= canvas.height / 2 + 30) {
             gameStarted = true;  // Set gameStarted to true to start the game
+            lastTime = null; // Reset lastTime to avoid timing issues
             startGame();         // Start the game loop
         }
     }
@@ -597,5 +632,89 @@ function handleStartGameClick(e) {
     }
 }
 
+let savedGameState = null;
+let animationFrameId = null;
+
+const pauseButton = document.getElementById('pauseButton');
+
+let pauseListenerAdded = false;
+let paused = false;
+
+pauseButton.addEventListener('click', () => {
+    if (!paused) {
+        paused = true;
+        pauseButton.textContent = 'Resume';
+
+        // Stop the animation loop
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+        }
+    } else {
+        paused = false;
+        pauseButton.textContent = 'Pause';
+
+        // Resume the game loop
+        lastTime = null;
+        animationFrameId = requestAnimationFrame(gameLoop);
+    }
+});
+
+
+
+
+const closeLossNotificationBtn = document.getElementById('closeLossNotification');
+if (!pauseListenerAdded) {
+    closeLossNotificationBtn.addEventListener('click', () => {
+        const lossNotification = document.getElementById('lossNotification');
+        const overlay = document.getElementById('overlay');
+        lossNotification.classList.remove('show');
+        lossNotification.style.display = 'none';
+        overlay.style.display = 'none';
+        gameStarted = false;
+        gameOver = false; // Reset gameOver flag here
+        lossNotificationShown = false; // Reset notification shown flag
+        initGame(); // Show start button again
+    });
+    pauseListenerAdded = true;
+}
+
+function resetGame() {
+    score = 0;
+    objects = [];
+    gameOver = false;
+    gameStarted = false;
+    lastTime = null;
+    lossNotificationShown = false;
+    savedGameState = null;
+
+    // Cancel animation loop if running
+    if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+    }
+
+    // Reset pause/resume button if needed
+    pauseButton.textContent = 'Pause';
+
+    // Hide overlays
+    document.getElementById('lossNotification').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+
+    // Reset difficulty
+    if (difficulty === 'Easy') {
+        fallingSpeed = 1;
+        objectCreationInterval = 2500;
+    } else if (difficulty === 'Intermediate') {
+        fallingSpeed = 1.2;
+        objectCreationInterval = 1000;
+    } else {
+        fallingSpeed = 3.5;
+        objectCreationInterval = 900;
+    }
+
+    // Show start button again
+    initGame();
+}
 
 initGame();
