@@ -12,7 +12,7 @@
     }
 
     #gameCanvas {
-        width: 100%;
+        width: 85%;
         max-width: 400px;
         height: auto;
     }
